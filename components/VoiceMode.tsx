@@ -27,10 +27,10 @@ const VoiceMode: React.FC<VoiceModeProps> = ({ scenario, language, onTranscriptU
   const startSession = async () => {
     try {
       const ai = getGeminiClient();
-      
+
       audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
       outputAudioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 24000 });
-      
+
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
       const sessionPromise = ai.live.connect({
@@ -40,7 +40,7 @@ const VoiceMode: React.FC<VoiceModeProps> = ({ scenario, language, onTranscriptU
             setIsActive(true);
             const source = audioContextRef.current!.createMediaStreamSource(stream);
             const scriptProcessor = audioContextRef.current!.createScriptProcessor(4096, 1, 1);
-            
+
             scriptProcessor.onaudioprocess = (e) => {
               const inputData = e.inputBuffer.getChannelData(0);
               const l = inputData.length;
@@ -76,21 +76,21 @@ const VoiceMode: React.FC<VoiceModeProps> = ({ scenario, language, onTranscriptU
 
             // Handle Transcriptions
             if (message.serverContent?.inputTranscription) {
-                currentInRef.current += message.serverContent.inputTranscription.text;
+              currentInRef.current += message.serverContent.inputTranscription.text;
             }
             if (message.serverContent?.outputTranscription) {
-                currentOutRef.current += message.serverContent.outputTranscription.text;
+              currentOutRef.current += message.serverContent.outputTranscription.text;
             }
 
             if (message.serverContent?.turnComplete) {
-                if (currentInRef.current) {
-                    onTranscriptUpdate({ sender: 'user', text: currentInRef.current });
-                    currentInRef.current = "";
-                }
-                if (currentOutRef.current) {
-                    onTranscriptUpdate({ sender: 'ai', text: currentOutRef.current });
-                    currentOutRef.current = "";
-                }
+              if (currentInRef.current) {
+                onTranscriptUpdate({ sender: 'user', text: currentInRef.current });
+                currentInRef.current = "";
+              }
+              if (currentOutRef.current) {
+                onTranscriptUpdate({ sender: 'ai', text: currentOutRef.current });
+                currentOutRef.current = "";
+              }
             }
 
             if (message.serverContent?.interrupted) {
@@ -135,12 +135,12 @@ const VoiceMode: React.FC<VoiceModeProps> = ({ scenario, language, onTranscriptU
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center py-4 bg-indigo-50 rounded-xl animate-in fade-in duration-300">
+    <div className="flex flex-col items-center justify-center py-4 bg-orange-50 rounded-xl animate-in fade-in duration-300">
       <div className="flex items-center gap-4">
         {!isActive ? (
-          <button 
+          <button
             onClick={startSession}
-            className="flex items-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-full font-bold shadow-lg hover:bg-indigo-700 transition-all"
+            className="flex items-center gap-2 bg-gradient-to-r from-orange-500 to-red-500 text-white px-6 py-3 rounded-full font-bold shadow-lg hover:from-orange-600 hover:to-red-600 transition-all"
           >
             <div className="h-3 w-3 bg-red-500 rounded-full animate-pulse"></div>
             Start Talking
@@ -149,10 +149,10 @@ const VoiceMode: React.FC<VoiceModeProps> = ({ scenario, language, onTranscriptU
           <div className="flex items-center gap-6">
             <div className="flex gap-1 items-center">
               {[...Array(5)].map((_, i) => (
-                <div key={i} className="w-1 bg-indigo-600 rounded-full animate-bounce" style={{ height: `${Math.random() * 20 + 10}px`, animationDelay: `${i * 0.1}s` }}></div>
+                <div key={i} className="w-1 bg-orange-600 rounded-full animate-bounce" style={{ height: `${Math.random() * 20 + 10}px`, animationDelay: `${i * 0.1}s` }}></div>
               ))}
             </div>
-            <button 
+            <button
               onClick={stopSession}
               className="bg-white border border-rose-200 text-rose-600 px-6 py-3 rounded-full font-bold hover:bg-rose-50 transition-all"
             >
@@ -162,7 +162,7 @@ const VoiceMode: React.FC<VoiceModeProps> = ({ scenario, language, onTranscriptU
         )}
       </div>
       {error && <p className="text-rose-500 text-xs mt-3">{error}</p>}
-      <p className="text-slate-500 text-xs mt-3 uppercase tracking-widest font-bold">
+      <p className="text-stone-500 text-xs mt-3 uppercase tracking-widest font-bold">
         {isActive ? "Listening and Speaking..." : "Voice mode disabled"}
       </p>
     </div>
