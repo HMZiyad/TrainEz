@@ -1,0 +1,7 @@
+{
+  "name": "TrainEZ",
+  "description": "An AI-powered restaurant staff training system featuring scenario-based simulations, live voice interaction, and performance evaluation.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
